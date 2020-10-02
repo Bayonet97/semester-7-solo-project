@@ -38,6 +38,7 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     protected void MovePerformed(InputAction.CallbackContext stickDirection)
     {
         movement = stickDirection.ReadValue<Vector2>();
+
     }
 
     protected void MoveCanceled(InputAction.CallbackContext obj)

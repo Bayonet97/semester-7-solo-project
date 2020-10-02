@@ -18,12 +18,12 @@ public class NineS : PlayerCharacterBase
         controls.NinesControls.Interact.performed += InteractPerformed;
     }
 
-    protected override void OnDisable()
+    protected override void OnEnable()
     {
         controls.NinesControls.Enable();
     }
 
-    protected override void OnEnable()
+    protected override void OnDisable()
     {
         controls.NinesControls.Disable();
     }
