@@ -9,9 +9,12 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     protected PlayerControls controls;
 
     [SerializeField]
+    private GameObject characterBody;
+
+    [SerializeField]
     protected Animator characterAnimator;
 
-    protected Vector2 movement;
+    protected Vector2 movementInput;
 
     [SerializeField]
     protected float speed;
@@ -23,7 +26,7 @@ public abstract class PlayerCharacterBase : MonoBehaviour
 
     protected void Update()
     {
-        if (movement != Vector2.zero)
+        if (movementInput != Vector2.zero)
         {
             Move();
         }
@@ -32,24 +35,34 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     private void Move() 
     {
         // When moving, the stick's direction is taken and translated to x and z axis.
-        Vector3 direction = new Vector3(movement.x * speed, 0, movement.y * speed);
+        Vector3 direction = new Vector3(movementInput.x * speed, 0, movementInput.y * speed);
         // The character then takes that direction and moves in world space.
         transform.Translate(direction * Time.deltaTime, Space.World);
-        //transform.LookAt(direction);
-        characterAnimator.SetFloat("Vertical", Mathf.Abs(movement.y) + Mathf.Abs(movement.x));
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     protected void MovePerformed(InputAction.CallbackContext stickDirection)
     {
         //stickDirection left - right is x value. up down is y value.
-        movement = stickDirection.ReadValue<Vector2>();        
+        Vector2 newMovementInput = stickDirection.ReadValue<Vector2>();
+     
+        if (newMovementInput == movementInput) 
+            return;
+
+        movementInput = newMovementInput;
+
+        if (movementInput == Vector2.zero)
+        {
+            characterAnimator.SetFloat("MovementSpeed", 0f);
+            return;
+        }
+        characterAnimator.SetFloat("MovementSpeed", movementInput.magnitude);
     }
 
     protected void MoveCanceled(InputAction.CallbackContext obj)
     {
-        movement = Vector2.zero;
-        Debug.Log("Stopped moving");
-        characterAnimator.SetFloat("Vertical", 0f);
+        movementInput = Vector2.zero;
+        characterAnimator.SetFloat("MovementSpeed", 0f);
     }
 
     protected void InteractPerformed(InputAction.CallbackContext obj)
