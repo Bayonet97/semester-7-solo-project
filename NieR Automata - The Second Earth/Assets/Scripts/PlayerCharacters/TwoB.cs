@@ -18,7 +18,7 @@ public class TwoB : PlayerCharacterBase
         controls.TwobControls.Interact.performed += InteractPerformed;
     }
 
-    protected override void OnEnable ()
+    protected override void OnEnable()
     {
         controls.TwobControls.Enable();
     }
