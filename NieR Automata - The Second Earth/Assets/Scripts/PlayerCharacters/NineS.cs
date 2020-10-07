@@ -2,8 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NineS : PlayerCharacterBase
+public class NineS : PlayerCharacterBase, IHacker
 {
+    [SerializeField]
+    private int _hackingRange;
+    public int HackingRange { get => _hackingRange; private set { } }
+
+    [SerializeField]
+    private int _hackingSpeed;
+    public int HackingSpeed { get => _hackingSpeed; private set { } }
+
     protected override void Awake()
     {
         base.Awake();
@@ -18,6 +26,11 @@ public class NineS : PlayerCharacterBase
         controls.NinesControls.Interact.performed += InteractPerformed;
     }
 
+    public void ControlContamination()
+    {
+        throw new System.NotImplementedException();
+    }
+
     protected override void OnEnable()
     {
         controls.NinesControls.Enable();
@@ -27,4 +40,5 @@ public class NineS : PlayerCharacterBase
     {
         controls.NinesControls.Disable();
     }
+
 }
