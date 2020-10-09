@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Objects;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,20 +9,22 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     // Reference to the mapping object of the controls
     protected PlayerControls controls;
 
-    [SerializeField]
-    private GameObject characterBody;
-
-    [SerializeField]
-    protected Animator characterAnimator;
+    protected CharacterDialogue characterDialogue;
+    protected CharacterInteraction characterInteraction;
 
     protected Vector2 movementInput;
 
-    [SerializeField]
-    protected float speed;
+    [SerializeField] protected Animator characterAnimator;
+
+    [SerializeField] protected float speed;
+
+    [SerializeField] private float interactionRange = 0.5f;
 
     protected virtual void Awake()
     {
         controls = new PlayerControls();
+        characterDialogue = new CharacterDialogue(this);
+        characterInteraction = new CharacterInteraction(this);
     }
 
     protected void Update()
@@ -32,7 +35,7 @@ public abstract class PlayerCharacterBase : MonoBehaviour
         }
     }
 
-    private void Move() 
+    protected virtual void Move() 
     {
         // When moving, the stick's direction is taken and translated to x and z axis.
         Vector3 direction = new Vector3(movementInput.x * speed, 0, movementInput.y * speed);
@@ -67,8 +70,30 @@ public abstract class PlayerCharacterBase : MonoBehaviour
 
     protected void InteractPerformed(InputAction.CallbackContext obj)
     {
-        throw new System.NotImplementedException();
+        if (characterDialogue.GetDialogueState() != DialogueState.Disabled)
+        {
+            characterDialogue.NextState();
+        }
+        else
+        {
+            
+            RaycastHit objectInRange;
+            if (Physics.Raycast(transform.position, transform.forward, out objectInRange, interactionRange))
+            {
+                
+                if (objectInRange.collider.gameObject.GetComponent<InteractableObject>())
+                    characterInteraction.InteractWithObject(objectInRange.collider.gameObject.GetComponent<InteractableObject>());
+            }
+        }
+
     }
+
+    public void ShowDialogue(string newDialogueText)
+    {
+        characterDialogue.OpenDialogue(newDialogueText);
+    }
+
+    public abstract void ChangePausedState(bool paused);
 
     protected abstract void OnEnable();
 

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public interface IHacker
 {
-    int HackingRange { get; }
+    float HackingRange { get; }
     int HackingSpeed { get; }
-    void ControlContamination();
+    void ControlContamination(IContaminated contaminated);
+    IContaminated HackingTarget { get; }
 }

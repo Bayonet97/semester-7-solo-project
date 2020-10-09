@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - TwoB
+  - NineS
   layers:
   - Default
   - TransparentFX
@@ -38,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: RangeIndicator
+    uniqueID: 3206114769
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

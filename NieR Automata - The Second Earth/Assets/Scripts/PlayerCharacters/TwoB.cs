@@ -10,6 +10,10 @@ public class TwoB : PlayerCharacterBase, IContaminated
     public static event SelfControlChanged OnSelfControlChanged;
 
     [SerializeField]
+    private int _maxSelfControl;
+    public int MaxSelfControl { get => _maxSelfControl; set => _maxSelfControl = value; }
+
+    [SerializeField]
     private int _selfControl;
     public int SelfControl
     {
@@ -24,10 +28,12 @@ public class TwoB : PlayerCharacterBase, IContaminated
 
     [SerializeField]
     private int _drainRate;
-
     public int DrainRate { get => _drainRate; set => _drainRate = value; }
 
-    public bool Draining { get; set; } = true;
+    [SerializeField]
+    private bool _draining;
+    public bool Draining { get => _draining; set => _draining = value; }
+
     protected override void Awake()
     {
         base.Awake();
@@ -44,13 +50,42 @@ public class TwoB : PlayerCharacterBase, IContaminated
         selfControlDecimal = _selfControl;
     }
 
-    new private void Update()
+    new protected void Update()
     {
         base.Update();
 
         if (Draining)
         {
             DrainSelfControl(_drainRate);
+        }
+    }
+
+    protected override void Move()
+    {
+        // When moving, the stick's direction is taken and translated to x and z axis.
+        Vector3 direction = new Vector3(movementInput.x * speed, 0, movementInput.y * speed);
+
+        if (SelfControl != MaxSelfControl)
+        {
+            float virusVariance = MaxSelfControl - SelfControl;
+       //     direction.x *= virusVariance
+        }
+
+        // The character then takes that direction and moves in world space.
+        transform.Translate(direction * Time.deltaTime, Space.World);
+        transform.rotation = Quaternion.LookRotation(direction);
+
+    }
+
+    public override void ChangePausedState(bool paused)
+    {
+        if (paused)
+        {
+            controls.TwobControls.Disable();
+        }
+        else if (!paused)
+        {
+            controls.TwobControls.Enable();
         }
     }
 
@@ -66,7 +101,19 @@ public class TwoB : PlayerCharacterBase, IContaminated
 
     public void DrainSelfControl(int amount)
     {
-        selfControlDecimal -= amount * Time.deltaTime;
-        SelfControl = Mathf.RoundToInt(selfControlDecimal);
+        if(SelfControl > 0)
+        {
+            selfControlDecimal -= amount * Time.deltaTime;
+            SelfControl = Mathf.RoundToInt(selfControlDecimal);
+        }
+    }
+
+    public void RestoreSelfControl(int amount)
+    {
+        if(SelfControl < MaxSelfControl)
+        {
+            selfControlDecimal += amount * Time.deltaTime;
+            SelfControl = Mathf.RoundToInt(selfControlDecimal);
+        }
     }
 }

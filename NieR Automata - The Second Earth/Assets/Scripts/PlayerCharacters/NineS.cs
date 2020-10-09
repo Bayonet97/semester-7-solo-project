@@ -5,12 +5,20 @@ using UnityEngine;
 public class NineS : PlayerCharacterBase, IHacker
 {
     [SerializeField]
-    private int _hackingRange;
-    public int HackingRange { get => _hackingRange; private set { } }
+    private float _hackingRange;
+    public float HackingRange { get => _hackingRange; }
 
     [SerializeField]
     private int _hackingSpeed;
-    public int HackingSpeed { get => _hackingSpeed; private set { } }
+    public int HackingSpeed { get => _hackingSpeed; }
+
+    public IContaminated HackingTarget { get; set; }
+
+    [SerializeField]
+    private SphereCollider hackingRangeCollider;
+
+    [SerializeField]
+    private SpriteRenderer hackingRangeIndicator;
 
     protected override void Awake()
     {
@@ -24,11 +32,36 @@ public class NineS : PlayerCharacterBase, IHacker
         controls.NinesControls.Move.canceled += MoveCanceled;
 
         controls.NinesControls.Interact.performed += InteractPerformed;
+
+        hackingRangeCollider.radius = HackingRange;
+        hackingRangeIndicator.size = new Vector2(HackingRange * 2.1f, HackingRange * 2.1f);
     }
 
-    public void ControlContamination()
+    new protected void Update()
     {
-        throw new System.NotImplementedException();
+        base.Update();
+
+        if (HackingTarget != null)
+        {
+            ControlContamination(HackingTarget);
+        }
+
+    }
+    public void ControlContamination(IContaminated contaminated)
+    {
+        contaminated.RestoreSelfControl(HackingSpeed);
+    }
+
+    public override void ChangePausedState(bool paused)
+    {
+        if (paused)
+        {
+            controls.NinesControls.Disable();          
+        }
+        else if (!paused)
+        {
+            controls.NinesControls.Enable();
+        }
     }
 
     protected override void OnEnable()
@@ -41,4 +74,22 @@ public class NineS : PlayerCharacterBase, IHacker
         controls.NinesControls.Disable();
     }
 
+    public void OnTriggerEnter(Collider c)
+    {
+        if(c.tag == "TwoB")
+        {
+            HackingTarget = c.GetComponent<TwoB>();
+            hackingRangeIndicator.color = new Color(1f, 1f, 1f, 0.9f);
+            HackingTarget.Draining = false;
+        }
+    }
+    public void OnTriggerExit(Collider c)
+    {
+        if(c.tag == "TwoB")
+        {
+            HackingTarget.Draining = true;
+            hackingRangeIndicator.color = new Color(1f, 1f, 1f, 0.5f);
+            HackingTarget = null;
+        }
+    }
 }

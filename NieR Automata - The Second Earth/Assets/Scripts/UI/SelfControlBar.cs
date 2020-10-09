@@ -9,9 +9,6 @@ public class SelfControlBar : MonoBehaviour
     [SerializeField]
     private Slider selfControlBar;
 
-    [SerializeField] //Should be IContaminated interface but interface cant hold a Unity friendly event.
-    private TwoB twoB;
-
     private void OnEnable()
     {
         TwoB.OnSelfControlChanged += UpdateSelfControlBar;
@@ -19,6 +16,12 @@ public class SelfControlBar : MonoBehaviour
 
     private void UpdateSelfControlBar(int selfControl)
     {
+        if(selfControlBar.value > selfControl)
+        {
+            // Change color of bar
+
+           // selfControlBar..normalColor = Color.green;
+        }
         selfControlBar.value = selfControl;
     }
 }
