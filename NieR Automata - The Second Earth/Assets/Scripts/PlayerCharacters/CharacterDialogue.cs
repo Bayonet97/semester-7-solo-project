@@ -14,6 +14,10 @@ public class CharacterDialogue : MonoBehaviour
 {
     public delegate void DialogueStateChanged(DialogueState state);
     public static event DialogueStateChanged OnDialogueStateChanged;
+    
+    public delegate void TextToDisplayChanged(string text);
+    public static event TextToDisplayChanged OnTextToDisplayChanged;
+
     public string DialogueText { get; private set; }
     private DialogueState _dialogueState = DialogueState.Disabled;
 
@@ -26,8 +30,10 @@ public class CharacterDialogue : MonoBehaviour
 
     public void OpenDialogue(string dialogue)
     {
-        DialogueText = dialogue;
-        //gameObject.GetComponent<Character>().ChangePausedState(true);
+        UpdateTextToDisplay(dialogue);
+
+        if (string.IsNullOrEmpty(dialogue)) return;
+        
         ChangeDialogueState(DialogueState.Typing);
     }
     public void NextDialogue()
@@ -45,6 +51,12 @@ public class CharacterDialogue : MonoBehaviour
     {
         character.ChangePausedState(false);
         ChangeDialogueState(DialogueState.Disabled);
+    }
+
+    private void UpdateTextToDisplay(string text)
+    {
+        DialogueText = text;
+        OnTextToDisplayChanged(text);
     }
 
     private void ChangeDialogueState(DialogueState state)
@@ -73,4 +85,5 @@ public class CharacterDialogue : MonoBehaviour
             CloseDialogue();
         }
     }
+
 }

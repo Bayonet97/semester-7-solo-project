@@ -63,18 +63,25 @@ public class TwoB : PlayerCharacterBase, IContaminated
     protected override void Move()
     {
         // When moving, the stick's direction is taken and translated to x and z axis.
-        Vector3 direction = new Vector3(movementInput.x * speed, 0, movementInput.y * speed);
+        Vector3 direction = new Vector3(oldMovementInput.x * speed, 0, oldMovementInput.y * speed);
+        transform.rotation = Quaternion.LookRotation(direction);
 
-        if (SelfControl != MaxSelfControl)
+        if (SelfControl != MaxSelfControl && SelfControl > 0)
         {
-            float virusVariance = MaxSelfControl - SelfControl;
-       //     direction.x *= virusVariance
+            float controlLoss = MaxSelfControl - SelfControl;
+
+            oldMovementInput = UnityEngine.Random.onUnitSphere * controlLoss;
+/*            float randomDirectionVariance = UnityEngine.Random.Range(1 - (controlLoss / 100), 1 + (controlLoss / 100));
+
+            movementInput.x *= randomDirectionVariance;*/
+        }
+        else if(SelfControl <= 0)
+        {
+            return;
         }
 
         // The character then takes that direction and moves in world space.
         transform.Translate(direction * Time.deltaTime, Space.World);
-        transform.rotation = Quaternion.LookRotation(direction);
-
     }
 
     public override void ChangePausedState(bool paused)

@@ -12,7 +12,8 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     protected CharacterDialogue characterDialogue;
     protected CharacterInteraction characterInteraction;
 
-    protected Vector2 movementInput;
+    protected Vector2 oldMovementInput;
+    protected Vector2 newMovementInput;
 
     [SerializeField] protected Animator characterAnimator;
 
@@ -29,7 +30,7 @@ public abstract class PlayerCharacterBase : MonoBehaviour
 
     protected void Update()
     {
-        if (movementInput != Vector2.zero)
+        if (oldMovementInput != Vector2.zero)
         {
             Move();
         }
@@ -38,33 +39,33 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     protected virtual void Move() 
     {
         // When moving, the stick's direction is taken and translated to x and z axis.
-        Vector3 direction = new Vector3(movementInput.x * speed, 0, movementInput.y * speed);
+        Vector3 direction = new Vector3(oldMovementInput.x * speed, 0, oldMovementInput.y * speed);
         // The character then takes that direction and moves in world space.
         transform.Translate(direction * Time.deltaTime, Space.World);
         transform.rotation = Quaternion.LookRotation(direction);
     }
 
     protected void MovePerformed(InputAction.CallbackContext stickDirection)
-    {
+    {   
         //stickDirection left - right is x value. up down is y value.
-        Vector2 newMovementInput = stickDirection.ReadValue<Vector2>();
-     
-        if (newMovementInput == movementInput) 
+        newMovementInput = stickDirection.ReadValue<Vector2>();
+
+        if (newMovementInput == oldMovementInput) 
             return;
 
-        movementInput = newMovementInput;
+        oldMovementInput = newMovementInput;
 
-        if (movementInput == Vector2.zero)
+        if (newMovementInput == Vector2.zero)
         {
             characterAnimator.SetFloat("MovementSpeed", 0f);
             return;
         }
-        characterAnimator.SetFloat("MovementSpeed", movementInput.magnitude);
+        characterAnimator.SetFloat("MovementSpeed", newMovementInput.magnitude);
     }
 
     protected void MoveCanceled(InputAction.CallbackContext obj)
     {
-        movementInput = Vector2.zero;
+        oldMovementInput = Vector2.zero;
         characterAnimator.SetFloat("MovementSpeed", 0f);
     }
 
@@ -75,8 +76,7 @@ public abstract class PlayerCharacterBase : MonoBehaviour
             characterDialogue.NextState();
         }
         else
-        {
-            
+        {           
             RaycastHit objectInRange;
             if (Physics.Raycast(transform.position, transform.forward, out objectInRange, interactionRange))
             {
