@@ -21,19 +21,15 @@ public class CharacterDialogue : MonoBehaviour
     public string DialogueText { get; private set; }
     private DialogueState _dialogueState = DialogueState.Disabled;
 
-    private readonly PlayerCharacterBase character;
-
-    public CharacterDialogue(PlayerCharacterBase _character)
-    {
-        character = _character;
-    }
+    [SerializeField] private PlayerCharacterBase character;
 
     public void OpenDialogue(string dialogue)
     {
         UpdateTextToDisplay(dialogue);
 
         if (string.IsNullOrEmpty(dialogue)) return;
-        
+
+        character.ChangePausedState(true);
         ChangeDialogueState(DialogueState.Typing);
     }
     public void NextDialogue()

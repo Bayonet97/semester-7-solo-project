@@ -56,11 +56,14 @@ public class NineS : PlayerCharacterBase, IHacker
     {
         if (paused)
         {
-            controls.NinesControls.Disable();          
+            oldMovementInput = Vector2.zero;
+            Move();
+            StopMovementAnimation();
+            controls.NinesControls.Move.performed -= MovePerformed;
         }
         else if (!paused)
         {
-            controls.NinesControls.Enable();
+            controls.NinesControls.Move.performed += MovePerformed;
         }
     }
 

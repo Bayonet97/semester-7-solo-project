@@ -6,12 +6,7 @@ using UnityEngine;
 
 public class CharacterInteraction : MonoBehaviour
 {
-    private PlayerCharacterBase character;
-
-    public CharacterInteraction(PlayerCharacterBase _character)
-    {
-        character = _character;
-    }
+    [SerializeField] private PlayerCharacterBase character;
 
     internal void InteractWithObject(InteractableObject objectOfInteraction)
     {

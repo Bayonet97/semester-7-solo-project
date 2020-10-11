@@ -68,9 +68,9 @@ public class TwoB : PlayerCharacterBase, IContaminated
 
         if (SelfControl != MaxSelfControl && SelfControl > 0)
         {
-            float controlLoss = MaxSelfControl - SelfControl;
+           /* float controlLoss = MaxSelfControl - SelfControl;
 
-            oldMovementInput = UnityEngine.Random.onUnitSphere * controlLoss;
+            oldMovementInput = UnityEngine.Random.onUnitSphere * controlLoss;*/
 /*            float randomDirectionVariance = UnityEngine.Random.Range(1 - (controlLoss / 100), 1 + (controlLoss / 100));
 
             movementInput.x *= randomDirectionVariance;*/
@@ -88,13 +88,17 @@ public class TwoB : PlayerCharacterBase, IContaminated
     {
         if (paused)
         {
-            controls.TwobControls.Disable();
+            oldMovementInput = Vector2.zero;
+            Move();
+            StopMovementAnimation();
+            controls.TwobControls.Move.performed -= MovePerformed;
         }
         else if (!paused)
         {
-            controls.TwobControls.Enable();
+            controls.TwobControls.Move.performed += MovePerformed;
         }
     }
+
 
     protected override void OnEnable()
     {
