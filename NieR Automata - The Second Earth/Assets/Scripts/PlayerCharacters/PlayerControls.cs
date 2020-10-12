@@ -105,6 +105,33 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""MenuControls"",
+            ""id"": ""44ffcf47-b1fe-4505-aa4a-4508cf1ffc8c"",
+            ""actions"": [
+                {
+                    ""name"": ""ResetLevel"",
+                    ""type"": ""Button"",
+                    ""id"": ""695ae4eb-1e5d-49c1-aa96-449635333189"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""2e7bde10-6402-4528-a37c-263a18574b77"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ResetLevel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -117,6 +144,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_NinesControls = asset.FindActionMap("NinesControls", throwIfNotFound: true);
         m_NinesControls_Move = m_NinesControls.FindAction("Move", throwIfNotFound: true);
         m_NinesControls_Interact = m_NinesControls.FindAction("Interact", throwIfNotFound: true);
+        // MenuControls
+        m_MenuControls = asset.FindActionMap("MenuControls", throwIfNotFound: true);
+        m_MenuControls_ResetLevel = m_MenuControls.FindAction("ResetLevel", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -244,6 +274,39 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         }
     }
     public NinesControlsActions @NinesControls => new NinesControlsActions(this);
+
+    // MenuControls
+    private readonly InputActionMap m_MenuControls;
+    private IMenuControlsActions m_MenuControlsActionsCallbackInterface;
+    private readonly InputAction m_MenuControls_ResetLevel;
+    public struct MenuControlsActions
+    {
+        private @PlayerControls m_Wrapper;
+        public MenuControlsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @ResetLevel => m_Wrapper.m_MenuControls_ResetLevel;
+        public InputActionMap Get() { return m_Wrapper.m_MenuControls; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenuControlsActions set) { return set.Get(); }
+        public void SetCallbacks(IMenuControlsActions instance)
+        {
+            if (m_Wrapper.m_MenuControlsActionsCallbackInterface != null)
+            {
+                @ResetLevel.started -= m_Wrapper.m_MenuControlsActionsCallbackInterface.OnResetLevel;
+                @ResetLevel.performed -= m_Wrapper.m_MenuControlsActionsCallbackInterface.OnResetLevel;
+                @ResetLevel.canceled -= m_Wrapper.m_MenuControlsActionsCallbackInterface.OnResetLevel;
+            }
+            m_Wrapper.m_MenuControlsActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @ResetLevel.started += instance.OnResetLevel;
+                @ResetLevel.performed += instance.OnResetLevel;
+                @ResetLevel.canceled += instance.OnResetLevel;
+            }
+        }
+    }
+    public MenuControlsActions @MenuControls => new MenuControlsActions(this);
     public interface ITwobControlsActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -253,5 +316,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+    }
+    public interface IMenuControlsActions
+    {
+        void OnResetLevel(InputAction.CallbackContext context);
     }
 }

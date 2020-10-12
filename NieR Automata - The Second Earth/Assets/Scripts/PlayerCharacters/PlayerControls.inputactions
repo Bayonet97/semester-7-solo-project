@@ -92,6 +92,33 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "MenuControls",
+            "id": "44ffcf47-b1fe-4505-aa4a-4508cf1ffc8c",
+            "actions": [
+                {
+                    "name": "ResetLevel",
+                    "type": "Button",
+                    "id": "695ae4eb-1e5d-49c1-aa96-449635333189",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2e7bde10-6402-4528-a37c-263a18574b77",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ResetLevel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
