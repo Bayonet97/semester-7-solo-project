@@ -9,8 +9,8 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     // Reference to the mapping object of the controls
     protected PlayerControls controls;
 
-    protected CharacterDialogue characterDialogue;
-    protected CharacterInteraction characterInteraction;
+    [SerializeField] protected CharacterDialogue characterDialogue;
+    [SerializeField] protected CharacterInteraction characterInteraction;
 
     protected Vector2 oldMovementInput;
     protected Vector2 newMovementInput;
@@ -24,8 +24,6 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     protected virtual void Awake()
     {
         controls = new PlayerControls();
-        characterDialogue = new CharacterDialogue(this);
-        characterInteraction = new CharacterInteraction(this);
     }
 
     protected void Update()
@@ -60,13 +58,13 @@ public abstract class PlayerCharacterBase : MonoBehaviour
             characterAnimator.SetFloat("MovementSpeed", 0f);
             return;
         }
-        characterAnimator.SetFloat("MovementSpeed", newMovementInput.magnitude);
+        UpdateMovementAnimation(newMovementInput.magnitude);
     }
 
     protected void MoveCanceled(InputAction.CallbackContext obj)
     {
         oldMovementInput = Vector2.zero;
-        characterAnimator.SetFloat("MovementSpeed", 0f);
+        StopMovementAnimation();
     }
 
     protected void InteractPerformed(InputAction.CallbackContext obj)
@@ -91,6 +89,15 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     public void ShowDialogue(string newDialogueText)
     {
         characterDialogue.OpenDialogue(newDialogueText);
+    }
+    public void UpdateMovementAnimation(float value)
+    {
+        characterAnimator.SetFloat("MovementSpeed", value);
+    }
+
+    public void StopMovementAnimation()
+    {
+        characterAnimator.SetFloat("MovementSpeed", 0f);
     }
 
     public abstract void ChangePausedState(bool paused);

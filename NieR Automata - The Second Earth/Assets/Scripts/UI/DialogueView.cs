@@ -9,8 +9,8 @@ public class DialogueView : MonoBehaviour
     private string _textToDisplay;
 
     [SerializeField] private int _timeBetweenLetters;
-    [SerializeField] private PlayerCharacterBase _character;
-    private CharacterDialogue _characterDialogue;
+    [SerializeField] private GameObject _twoB;
+    [SerializeField] private GameObject _nineS;
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +47,7 @@ public class DialogueView : MonoBehaviour
                 dialogText.text = _textToDisplay;
          
         }
-        _characterDialogue.DoneTyping();
+        //_characterDialogue.DoneTyping();
         _textToDisplay = "";
     }
 
