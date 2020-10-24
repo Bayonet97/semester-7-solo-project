@@ -12,7 +12,13 @@ public class NineS : PlayerCharacterBase, IHacker
     private int _hackingSpeed;
     public int HackingSpeed { get => _hackingSpeed; }
 
-    public IContaminated HackingTarget { get; set; }
+    [SerializeField]
+    private Contaminated _hackingTarget;
+    public Contaminated HackingTarget { get => _hackingTarget; }
+
+    [SerializeField]
+    private bool _inRange;
+    public bool InRange { get => _inRange; private set => _inRange = value; }
 
     [SerializeField]
     private SphereCollider hackingRangeCollider;
@@ -41,9 +47,9 @@ public class NineS : PlayerCharacterBase, IHacker
     {
         base.Update();
 
-        if (HackingTarget != null)
+        if (InRange)
         {
-            ControlContamination(HackingTarget);
+            HackingTarget.RestoreSelfControl(HackingSpeed);
         }
 
     }
@@ -81,7 +87,7 @@ public class NineS : PlayerCharacterBase, IHacker
     {
         if(c.tag == "TwoB")
         {
-            HackingTarget = c.GetComponent<TwoB>();
+            InRange = true;
             hackingRangeIndicator.color = new Color(1f, 1f, 1f, 0.9f);
             HackingTarget.Draining = false;
         }
@@ -92,7 +98,7 @@ public class NineS : PlayerCharacterBase, IHacker
         {
             HackingTarget.Draining = true;
             hackingRangeIndicator.color = new Color(1f, 1f, 1f, 0.5f);
-            HackingTarget = null;
+            InRange = false;
         }
     }
 }

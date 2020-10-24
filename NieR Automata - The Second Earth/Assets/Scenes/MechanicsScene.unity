@@ -609,6 +609,8 @@ MonoBehaviour:
   interactionRange: 0.5
   _hackingRange: 3
   _hackingSpeed: 10
+  _hackingTarget: {fileID: 11400000, guid: 50b7f5d6c80a9684ab82902cb5e16f2b, type: 2}
+  _inRange: 0
   hackingRangeCollider: {fileID: 331932032}
   hackingRangeIndicator: {fileID: 1889862890}
 --- !u!95 &331932029 stripped
@@ -901,6 +903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selfControlBar: {fileID: 457084998}
+  Infected: {fileID: 0}
 --- !u!114 &457084998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3245,10 +3248,7 @@ MonoBehaviour:
   characterAnimator: {fileID: 1666100076}
   speed: 3
   interactionRange: 0.5
-  _maxSelfControl: 100
-  _selfControl: 100
-  _drainRate: 5
-  _draining: 0
+  Contaminated: {fileID: 11400000, guid: 50b7f5d6c80a9684ab82902cb5e16f2b, type: 2}
 --- !u!95 &1666100076 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 95511887735396104, guid: 24362449162558a49bc6904c0fda923a, type: 3}

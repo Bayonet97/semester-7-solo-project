@@ -9,9 +9,12 @@ public class SelfControlBar : MonoBehaviour
     [SerializeField]
     private Slider selfControlBar;
 
+    public Contaminated Infected;
+
     private void OnEnable()
     {
-        TwoB.OnSelfControlChanged += UpdateSelfControlBar;
+        //TwoB.OnSelfControlChanged += UpdateSelfControlBar;
+        Contaminated.OnSelfControlChanged += UpdateSelfControlBar;
     }
 
     private void UpdateSelfControlBar(int selfControl)

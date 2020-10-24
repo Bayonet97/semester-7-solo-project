@@ -87,11 +87,11 @@ public class MultipleTargetCamera : MonoBehaviour
 
     public void OnEnable()
     {
-        TwoB.OnSelfControlChanged += ManageFollowTwob;
+        Contaminated.OnSelfControlChanged += ManageFollowTwob;
     }
 
     public void OnDisable()
     {
-        TwoB.OnSelfControlChanged -= ManageFollowTwob;
+        Contaminated.OnSelfControlChanged -= ManageFollowTwob;
     }
 }

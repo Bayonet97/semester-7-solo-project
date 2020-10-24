@@ -3,36 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TwoB : PlayerCharacterBase, IContaminated
+public class TwoB : PlayerCharacterBase
 {
-
-    public delegate void SelfControlChanged(int newValue);
-    public static event SelfControlChanged OnSelfControlChanged;
-
-    [SerializeField]
-    private int _maxSelfControl;
-    public int MaxSelfControl { get => _maxSelfControl; set => _maxSelfControl = value; }
-
-    [SerializeField]
-    private int _selfControl;
-    public int SelfControl
-    {
-        get => _selfControl;
-        set
-        {
-            _selfControl = value;
-            OnSelfControlChanged(value);
-        }
-    }
-    private float selfControlDecimal;
-
-    [SerializeField]
-    private int _drainRate;
-    public int DrainRate { get => _drainRate; set => _drainRate = value; }
-
-    [SerializeField]
-    private bool _draining;
-    public bool Draining { get => _draining; set => _draining = value; }
+    public Contaminated Contaminated;
 
     protected override void Awake()
     {
@@ -46,17 +19,15 @@ public class TwoB : PlayerCharacterBase, IContaminated
         controls.TwobControls.Move.canceled += MoveCanceled;
 
         controls.TwobControls.Interact.performed += InteractPerformed;
-
-        selfControlDecimal = _selfControl;
     }
 
     new protected void Update()
     {
         base.Update();
 
-        if (Draining)
+        if (Contaminated.Draining)
         {
-            DrainSelfControl(_drainRate);
+            Contaminated.DrainSelfControl(Contaminated.DrainRate);
         }
     }
 
@@ -66,7 +37,7 @@ public class TwoB : PlayerCharacterBase, IContaminated
         Vector3 direction = new Vector3(oldMovementInput.x * speed, 0, oldMovementInput.y * speed);
         transform.rotation = Quaternion.LookRotation(direction);
 
-        if (SelfControl != MaxSelfControl && SelfControl > 0)
+        if (Contaminated.SelfControl != Contaminated.MaxSelfControl && Contaminated.SelfControl > 0)
         {
            /* float controlLoss = MaxSelfControl - SelfControl;
 
@@ -75,7 +46,7 @@ public class TwoB : PlayerCharacterBase, IContaminated
 
             movementInput.x *= randomDirectionVariance;*/
         }
-        else if(SelfControl <= 0)
+        else if(Contaminated.SelfControl <= 0)
         {
             return;
         }
@@ -110,21 +81,4 @@ public class TwoB : PlayerCharacterBase, IContaminated
         controls.TwobControls.Disable();
     }
 
-    public void DrainSelfControl(int amount)
-    {
-        if(SelfControl > 0)
-        {
-            selfControlDecimal -= amount * Time.deltaTime;
-            SelfControl = Mathf.RoundToInt(selfControlDecimal);
-        }
-    }
-
-    public void RestoreSelfControl(int amount)
-    {
-        if(SelfControl < MaxSelfControl)
-        {
-            selfControlDecimal += amount * Time.deltaTime;
-            SelfControl = Mathf.RoundToInt(selfControlDecimal);
-        }
-    }
 }
