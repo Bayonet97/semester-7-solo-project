@@ -55,16 +55,16 @@ public class TwoB : PlayerCharacterBase
         transform.Translate(direction * Time.deltaTime, Space.World);
     }
 
-    public override void ChangePausedState(bool paused)
+    public override void ChangePausedState(DialogueState state)
     {
-        if (paused)
+        if (state != DialogueState.Disabled)
         {
             oldMovementInput = Vector2.zero;
             Move();
             StopMovementAnimation();
             controls.TwobControls.Move.performed -= MovePerformed;
         }
-        else if (!paused)
+        else if (state == DialogueState.Disabled)
         {
             controls.TwobControls.Move.performed += MovePerformed;
         }
@@ -73,11 +73,13 @@ public class TwoB : PlayerCharacterBase
 
     protected override void OnEnable()
     {
+        base.OnEnable();
         controls.TwobControls.Enable();
     }
 
     protected override void OnDisable()
     {
+        base.OnDisable();
         controls.TwobControls.Disable();
     }
 

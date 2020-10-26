@@ -86,7 +86,7 @@ public abstract class PlayerCharacterBase : MonoBehaviour
 
     }
 
-    public void ShowDialogue(string newDialogueText)
+    public void ShowDialogue(List<string> newDialogueText)
     {
         characterDialogue.OpenDialogue(newDialogueText);
     }
@@ -100,9 +100,17 @@ public abstract class PlayerCharacterBase : MonoBehaviour
         characterAnimator.SetFloat("MovementSpeed", 0f);
     }
 
-    public abstract void ChangePausedState(bool paused);
+    public abstract void ChangePausedState(DialogueState state);
 
-    protected abstract void OnEnable();
+    protected virtual void OnEnable() 
+    {
+        CharacterDialogue.OnDialogueStateChanged += ChangePausedState;
+        CharacterInteraction.OnDialogueHasText += ShowDialogue;
+    }
 
-    protected abstract void OnDisable();
+    protected virtual void OnDisable()
+    {
+        CharacterDialogue.OnDialogueStateChanged -= ChangePausedState;
+        CharacterInteraction.OnDialogueHasText -= ShowDialogue;
+    }
 }

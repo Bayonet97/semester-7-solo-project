@@ -4,9 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterInteraction : MonoBehaviour
+[CreateAssetMenu(fileName = "Player Character Interaction")]
+public class CharacterInteraction : ScriptableObject
 {
-    [SerializeField] private PlayerCharacterBase character;
+    public delegate void DialogueHasText(List<string> text);
+    public static event DialogueHasText OnDialogueHasText;
 
     internal void InteractWithObject(InteractableObject objectOfInteraction)
     {
@@ -14,8 +16,8 @@ public class CharacterInteraction : MonoBehaviour
 
         objectOfInteraction.Interact();
 
-        if(objectOfInteraction.TextToShow != "" && objectOfInteraction != null)
-            character.ShowDialogue(objectOfInteraction.TextToShow);
+        if(objectOfInteraction.InteractionFlows[0] != null && objectOfInteraction != null)
+            OnDialogueHasText(objectOfInteraction.InteractionFlows[0].Dialogue);
     }
 
     // TO DO: Change the way the character checks for a specific object to not rely on their name.

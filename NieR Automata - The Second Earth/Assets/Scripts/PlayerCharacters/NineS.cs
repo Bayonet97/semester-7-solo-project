@@ -58,16 +58,16 @@ public class NineS : PlayerCharacterBase, IHacker
         contaminated.RestoreSelfControl(HackingSpeed);
     }
 
-    public override void ChangePausedState(bool paused)
+    public override void ChangePausedState(DialogueState state)
     {
-        if (paused)
+        if (state != DialogueState.Disabled)
         {
             oldMovementInput = Vector2.zero;
             Move();
             StopMovementAnimation();
             controls.NinesControls.Move.performed -= MovePerformed;
         }
-        else if (!paused)
+        else if (state == DialogueState.Disabled)
         {
             controls.NinesControls.Move.performed += MovePerformed;
         }
@@ -75,11 +75,13 @@ public class NineS : PlayerCharacterBase, IHacker
 
     protected override void OnEnable()
     {
+        base.OnEnable();
         controls.NinesControls.Enable();
     }
 
     protected override void OnDisable()
     {
+        base.OnDisable();
         controls.NinesControls.Disable();
     }
 
