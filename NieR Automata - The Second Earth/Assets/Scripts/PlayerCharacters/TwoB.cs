@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TwoB : PlayerCharacterBase
 {
@@ -31,37 +33,35 @@ public class TwoB : PlayerCharacterBase
         }
     }
 
-    protected override void Move()
+    protected override void InteractPerformed(InputAction.CallbackContext obj)
     {
-        // When moving, the stick's direction is taken and translated to x and z axis.
-        Vector3 direction = new Vector3(oldMovementInput.x * speed, 0, oldMovementInput.y * speed);
-        transform.rotation = Quaternion.LookRotation(direction);
-
-        if (Contaminated.SelfControl != Contaminated.MaxSelfControl && Contaminated.SelfControl > 0)
+        if (Contaminated.SelfControl > 0)
         {
-           /* float controlLoss = MaxSelfControl - SelfControl;
-
-            oldMovementInput = UnityEngine.Random.onUnitSphere * controlLoss;*/
-/*            float randomDirectionVariance = UnityEngine.Random.Range(1 - (controlLoss / 100), 1 + (controlLoss / 100));
-
-            movementInput.x *= randomDirectionVariance;*/
+            base.InteractPerformed(obj);
         }
-        else if(Contaminated.SelfControl <= 0)
-        {
-            return;
-        }
-
-        // The character then takes that direction and moves in world space.
-        transform.Translate(direction * Time.deltaTime, Space.World);
     }
 
-    public override void ChangePausedState(DialogueState state)
+    protected override void Move()
     {
+        // Goes from 0.0 to 1.0 depending on current SelfControl and takes 20% of the value. 
+        float finalTwitchMultiplier = 0.6f * Contaminated.SelfControlCurve.Evaluate((float)Contaminated.SelfControl / 100);
+
+        // Adds the twitch value % randomly to the initial movement input.
+        Vector2 twitchMovementDirection = oldMovementInput * UnityEngine.Random.Range(1 - finalTwitchMultiplier, 1 + finalTwitchMultiplier);
+
+        // Determines the movement direction and speed in the world space. 
+        Vector3 worldDirection = new Vector3(twitchMovementDirection.x * speed, 0, twitchMovementDirection.y * speed);
+        //Look at direction
+        transform.rotation = Quaternion.LookRotation(worldDirection);
+        // Move
+        transform.Translate(worldDirection * Time.deltaTime, Space.World);
+    }
+
+    public override void UpdateCharacterDialogueState(DialogueState state)
+    {
+        base.UpdateCharacterDialogueState(state);
         if (state != DialogueState.Disabled)
         {
-            oldMovementInput = Vector2.zero;
-            Move();
-            StopMovementAnimation();
             controls.TwobControls.Move.performed -= MovePerformed;
         }
         else if (state == DialogueState.Disabled)

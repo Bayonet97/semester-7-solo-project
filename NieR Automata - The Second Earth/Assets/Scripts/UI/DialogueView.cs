@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class DialogueView : MonoBehaviour
 {
-    public Text dialogText;
+    public Text dialogueText;
+    public Text dialogueName;
     private string _textToDisplay;
 
     [SerializeField] private int _timeBetweenLetters;
@@ -29,9 +30,13 @@ public class DialogueView : MonoBehaviour
         }
     }
 
-    public void UpdateTextToDisplay(string text)
+    public void UpdateTextToDisplay(string text, string name)
     {
         _textToDisplay = text;
+        if (!string.IsNullOrEmpty(name)) 
+        {
+            dialogueName.text = name;
+        } 
     }
 
     private void DisplayText()
@@ -43,7 +48,7 @@ public class DialogueView : MonoBehaviour
         foreach (char ch in charArr)
         {
                 charText = charText + ch;
-                dialogText.text = _textToDisplay; 
+                dialogueText.text = _textToDisplay; 
         }
         _characterDialogue.DoneTyping();
         _textToDisplay = "";

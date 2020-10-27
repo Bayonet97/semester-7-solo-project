@@ -9,6 +9,10 @@ public class Contaminated : ScriptableObject, IContaminated
     public static event SelfControlChanged OnSelfControlChanged;
 
     [SerializeField]
+    private AnimationCurve _selfControlCurve;
+    public AnimationCurve SelfControlCurve { get => _selfControlCurve; set => _selfControlCurve = value; }
+
+    [SerializeField]
     private int _maxSelfControl;
     public int MaxSelfControl { get => _maxSelfControl; set => _maxSelfControl = value; }
 

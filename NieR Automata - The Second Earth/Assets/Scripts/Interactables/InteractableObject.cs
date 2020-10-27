@@ -11,6 +11,10 @@ namespace Assets.Scripts.Objects
 
         private int _interactionCount;
 
+        [SerializeField]
+        private string _name;
+        public string Name { get => _name; set => _name = value; }
+
         public string TextToShow { get; set; }
         public virtual void Interact()
         {

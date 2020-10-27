@@ -58,13 +58,11 @@ public class NineS : PlayerCharacterBase, IHacker
         contaminated.RestoreSelfControl(HackingSpeed);
     }
 
-    public override void ChangePausedState(DialogueState state)
+    public override void UpdateCharacterDialogueState(DialogueState state)
     {
+        base.UpdateCharacterDialogueState(state);
         if (state != DialogueState.Disabled)
         {
-            oldMovementInput = Vector2.zero;
-            Move();
-            StopMovementAnimation();
             controls.NinesControls.Move.performed -= MovePerformed;
         }
         else if (state == DialogueState.Disabled)

@@ -18,7 +18,7 @@ public class CharacterDialogue : ScriptableObject
     public delegate void DialogueStateChanged(DialogueState state);
     public static event DialogueStateChanged OnDialogueStateChanged;
 
-    public delegate void TextToDisplayChanged(string text);
+    public delegate void TextToDisplayChanged(string text, string name);
     public static event TextToDisplayChanged OnTextToDisplayChanged;
 
     [SerializeField]
@@ -34,12 +34,12 @@ public class CharacterDialogue : ScriptableObject
     private DialogueState _dialogueState = DialogueState.Disabled;
 
 
-    public void OpenDialogue(List<string> dialogue)
+    public void OpenDialogue(List<string> dialogue, string name)
     {
         Dialogue = dialogue;
         _interactionCount = 0;
 
-        UpdateTextToDisplay(Dialogue[_interactionCount]);
+        UpdateTextToDisplay(Dialogue[_interactionCount], name);
 
         if (string.IsNullOrEmpty(Dialogue[_interactionCount])) return;
 
@@ -63,11 +63,12 @@ public class CharacterDialogue : ScriptableObject
         Clear();
     }
 
-    private void UpdateTextToDisplay(string text)
+    private void UpdateTextToDisplay(string text, string name)
     {
         DialogueText = text;
-        OnTextToDisplayChanged(text);
+        OnTextToDisplayChanged(text, name);
     }
+
 
     private void ChangeDialogueState(DialogueState state)
     {
@@ -95,7 +96,7 @@ public class CharacterDialogue : ScriptableObject
             _interactionCount++;
             if (Dialogue.Count - 1 >= _interactionCount)
             {
-                UpdateTextToDisplay(Dialogue[_interactionCount]);
+                UpdateTextToDisplay(Dialogue[_interactionCount], null);
                 ChangeDialogueState(DialogueState.Typing);
                 return;
             }

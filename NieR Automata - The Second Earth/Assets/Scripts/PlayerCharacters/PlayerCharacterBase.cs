@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Objects;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,7 +35,7 @@ public abstract class PlayerCharacterBase : MonoBehaviour
         }
     }
 
-    protected virtual void Move() 
+    protected virtual void Move()
     {
         // When moving, the stick's direction is taken and translated to x and z axis.
         Vector3 direction = new Vector3(oldMovementInput.x * speed, 0, oldMovementInput.y * speed);
@@ -44,11 +45,11 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     }
 
     protected void MovePerformed(InputAction.CallbackContext stickDirection)
-    {   
+    {
         //stickDirection left - right is x value. up down is y value.
         newMovementInput = stickDirection.ReadValue<Vector2>();
 
-        if (newMovementInput == oldMovementInput) 
+        if (newMovementInput == oldMovementInput)
             return;
 
         oldMovementInput = newMovementInput;
@@ -67,18 +68,18 @@ public abstract class PlayerCharacterBase : MonoBehaviour
         StopMovementAnimation();
     }
 
-    protected void InteractPerformed(InputAction.CallbackContext obj)
+    protected virtual void InteractPerformed(InputAction.CallbackContext obj)
     {
         if (characterDialogue.GetDialogueState() != DialogueState.Disabled)
         {
             characterDialogue.NextState();
         }
         else
-        {           
+        {
             RaycastHit objectInRange;
             if (Physics.Raycast(transform.position, transform.forward, out objectInRange, interactionRange))
             {
-                
+
                 if (objectInRange.collider.gameObject.GetComponent<InteractableObject>())
                     characterInteraction.InteractWithObject(objectInRange.collider.gameObject.GetComponent<InteractableObject>());
             }
@@ -86,9 +87,9 @@ public abstract class PlayerCharacterBase : MonoBehaviour
 
     }
 
-    public void ShowDialogue(List<string> newDialogueText)
+    public void ShowDialogue(List<string> newDialogueText, string name)
     {
-        characterDialogue.OpenDialogue(newDialogueText);
+        characterDialogue.OpenDialogue(newDialogueText, name);
     }
     public void UpdateMovementAnimation(float value)
     {
@@ -100,17 +101,40 @@ public abstract class PlayerCharacterBase : MonoBehaviour
         characterAnimator.SetFloat("MovementSpeed", 0f);
     }
 
-    public abstract void ChangePausedState(DialogueState state);
+    public virtual void UpdateCharacterDialogueState(DialogueState state)
+    {
+        if (state != DialogueState.Disabled)
+        {
+            if (oldMovementInput != Vector2.zero)
+            {
+                // Set current movement to 0
+                oldMovementInput = Vector2.zero;
+                Move();
+            }
+            if (characterAnimator.GetFloat("MovementSpeed") != 0f)
+            {
+                StopMovementAnimation();
+            }
+        }
+    }
+
+    private void LookAtConversatingTarget(InteractableObject interactable)
+    {
+        transform.LookAt(interactable.transform);
+    }
 
     protected virtual void OnEnable() 
     {
-        CharacterDialogue.OnDialogueStateChanged += ChangePausedState;
+        CharacterDialogue.OnDialogueStateChanged += UpdateCharacterDialogueState;
         CharacterInteraction.OnDialogueHasText += ShowDialogue;
+        CharacterInteraction.OnConversating += LookAtConversatingTarget;
     }
+
 
     protected virtual void OnDisable()
     {
-        CharacterDialogue.OnDialogueStateChanged -= ChangePausedState;
+        CharacterDialogue.OnDialogueStateChanged -= UpdateCharacterDialogueState;
         CharacterInteraction.OnDialogueHasText -= ShowDialogue;
+        CharacterInteraction.OnConversating -= LookAtConversatingTarget;
     }
 }
