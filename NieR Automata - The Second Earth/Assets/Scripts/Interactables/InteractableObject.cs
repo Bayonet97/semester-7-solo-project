@@ -19,7 +19,7 @@ namespace Assets.Scripts.Objects
         public virtual void Interact()
         {
             // Default implementation.
-            UpdateTextToShow(InteractionFlows[0]);
+          //  UpdateTextToShow(InteractionFlows[0]);
             _interactionCount++;
         }
         public virtual void Interact(bool hasItem)
@@ -27,12 +27,12 @@ namespace Assets.Scripts.Objects
             // Default implementation.
             if (hasItem)
             {
-                UpdateTextToShow(InteractionFlows[1]);
+               // UpdateTextToShow(InteractionFlows[1]);
                 _interactionCount++;
             }
             else
             {
-                UpdateTextToShow(InteractionFlows[0]);
+               // UpdateTextToShow(InteractionFlows[0]);
                 _interactionCount++;
             }
         }
@@ -40,11 +40,11 @@ namespace Assets.Scripts.Objects
         public virtual void Interact(int amount)
         {
             // Default implementation.
-            UpdateTextToShow(InteractionFlows[amount]);
+          //  UpdateTextToShow(InteractionFlows[amount]);
             _interactionCount++;
         }
 
-        public void UpdateTextToShow(InteractionFlow interactionFlow)
+/*        public void UpdateTextToShow(InteractionFlow interactionFlow)
         {
             if (_interactionCount >= interactionFlow.Dialogue.Count && interactionFlow.GetRepeatable() == false)
             { // Not Repeatable
@@ -61,7 +61,7 @@ namespace Assets.Scripts.Objects
             {
                 TextToShow = interactionFlow.Dialogue[_interactionCount];
             }
-        }
+        }*/
 
         public void SetInteractionCount(int count)
         {

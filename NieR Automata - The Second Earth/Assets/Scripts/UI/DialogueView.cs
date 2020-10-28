@@ -43,6 +43,7 @@ public class DialogueView : MonoBehaviour
     {
         this.gameObject.SetActive(true);
 
+        _textToDisplay = _textToDisplay.Replace("<br> ", System.Environment.NewLine);
         char[] charArr = _textToDisplay.ToCharArray();
         string charText = "";
         foreach (char ch in charArr)
@@ -60,9 +61,7 @@ public class DialogueView : MonoBehaviour
        CharacterDialogue.OnTextToDisplayChanged += UpdateTextToDisplay;
     }
 
-    public void OnDestroy()
+    public void OnDisable()
     {
-        CharacterDialogue.OnDialogueStateChanged -= UpdateToStateOfDialogue;
-        CharacterDialogue.OnTextToDisplayChanged -= UpdateTextToDisplay;
     }
 }

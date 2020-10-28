@@ -79,7 +79,6 @@ public abstract class PlayerCharacterBase : MonoBehaviour
             RaycastHit objectInRange;
             if (Physics.Raycast(transform.position, transform.forward, out objectInRange, interactionRange))
             {
-
                 if (objectInRange.collider.gameObject.GetComponent<InteractableObject>())
                     characterInteraction.InteractWithObject(objectInRange.collider.gameObject.GetComponent<InteractableObject>());
             }

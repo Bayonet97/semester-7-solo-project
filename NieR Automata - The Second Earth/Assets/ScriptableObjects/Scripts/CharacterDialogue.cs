@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public enum DialogueState
@@ -7,10 +8,6 @@ public enum DialogueState
     Typing,
     Displayed
 }
-// BUGS: 
-// - DialogueState goes to typing until shift is pressed
-// - DialogueState goes Disabled after Displayed, even if there is more text
-// - Dialogue Text stays after dialoge ends.
 
 [CreateAssetMenu(fileName = "Player Character Dialogue")]
 public class CharacterDialogue : ScriptableObject
@@ -25,6 +22,10 @@ public class CharacterDialogue : ScriptableObject
     private string _dialogueText;
     public string DialogueText { get=> _dialogueText; private set => _dialogueText = value; }
 
+    [SerializeField]
+    private string _name;
+    public string Name { get => _name; private set => _name = value; }
+
     public List<string> Dialogue;
 
     [SerializeField]
@@ -37,9 +38,10 @@ public class CharacterDialogue : ScriptableObject
     public void OpenDialogue(List<string> dialogue, string name)
     {
         Dialogue = dialogue;
+        Name = name;
         _interactionCount = 0;
 
-        UpdateTextToDisplay(Dialogue[_interactionCount], name);
+        UpdateTextToDisplay(Dialogue[_interactionCount], Name);
 
         if (string.IsNullOrEmpty(Dialogue[_interactionCount])) return;
 
@@ -66,7 +68,7 @@ public class CharacterDialogue : ScriptableObject
     private void UpdateTextToDisplay(string text, string name)
     {
         DialogueText = text;
-        OnTextToDisplayChanged(text, name);
+        OnTextToDisplayChanged(text, Name);
     }
 
 
@@ -110,10 +112,15 @@ public class CharacterDialogue : ScriptableObject
         _dialogueState = DialogueState.Disabled;
         Dialogue = null;
         DialogueText = "";
+        Name = "";
         _interactionCount = 0;
     }
 
-    void OnDisable()
+    public void OnEnable()
+    {
+        Clear();
+    }
+    public void OnDisable()
     {
         Clear();
     }
