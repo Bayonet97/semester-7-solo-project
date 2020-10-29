@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class TwoB : PlayerCharacterBase
 {
     public Contaminated Contaminated;
-
+    private Vector2 randomSway;
     protected override void Awake()
     {
         base.Awake();
@@ -23,9 +23,9 @@ public class TwoB : PlayerCharacterBase
         controls.TwobControls.Interact.performed += InteractPerformed;
     }
 
-    new protected void Update()
+    new protected void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
 
         if (Contaminated.Draining)
         {
@@ -46,7 +46,7 @@ public class TwoB : PlayerCharacterBase
         if (Contaminated.SelfControl > 0)
         {  
             // Goes from 0.0 to 1.0 depending on current SelfControl and takes 20% of the value. 
-            float finalTwitchMultiplier = 0.6f * Contaminated.SelfControlCurve.Evaluate((float)Contaminated.SelfControl / 100);
+            float finalTwitchMultiplier = 0.3f * Contaminated.SelfControlCurve.Evaluate((float)Contaminated.SelfControl / 100);
 
             // Adds the twitch value % randomly to the initial movement input.
             Vector2 twitchMovementDirection = AddRandomMovement(oldMovementInput, finalTwitchMultiplier);
@@ -58,11 +58,6 @@ public class TwoB : PlayerCharacterBase
             transform.rotation = Quaternion.LookRotation(worldDirection);
             // Move
             transform.Translate(worldDirection * Time.deltaTime, Space.World);
-            Debug.Log("Curve value:" + Contaminated.SelfControlCurve.Evaluate((float)Contaminated.SelfControl / 100));
-            Debug.Log("Multiplier:" + finalTwitchMultiplier);
-            Debug.Log("old:" + oldMovementInput);
-            Debug.Log("new:" + twitchMovementDirection);
-            Debug.Log("world:" + worldDirection);
         }
       
     }
@@ -70,8 +65,16 @@ public class TwoB : PlayerCharacterBase
     private Vector2 AddRandomMovement(Vector2 direction, float multiplier)
     {
         //TODO add variable that saves the last random result for both x and y. Base the new random value on the previous one if input direction is the same. 
-        direction = direction * UnityEngine.Random.Range(1 - multiplier, 1 + multiplier);
-        Vector2 randomDirection = new Vector2(direction.x * UnityEngine.Random.Range(1 - multiplier, 1 + multiplier), direction.y * UnityEngine.Random.Range(1 - multiplier, 1 + multiplier));
+        if(randomSway == null || randomSway == Vector2.zero)
+        {
+            randomSway = direction;
+        }
+
+        randomSway.Normalize();
+        randomSway *= multiplier;
+        randomSway = new Vector2(randomSway.x + UnityEngine.Random.Range(0 - multiplier, 0 + multiplier), randomSway.y + UnityEngine.Random.Range(0 - multiplier, 0 + multiplier));
+
+        Vector2 randomDirection = new Vector2(direction.x + randomSway.x, direction.y + randomSway.y);
         return randomDirection;
     }
     public override void UpdateCharacterDialogueState(DialogueState state)

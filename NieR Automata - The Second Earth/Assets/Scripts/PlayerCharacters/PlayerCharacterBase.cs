@@ -27,7 +27,7 @@ public abstract class PlayerCharacterBase : MonoBehaviour
         controls = new PlayerControls();
     }
 
-    protected void Update()
+    protected void FixedUpdate()
     {
         if (oldMovementInput != Vector2.zero)
         {

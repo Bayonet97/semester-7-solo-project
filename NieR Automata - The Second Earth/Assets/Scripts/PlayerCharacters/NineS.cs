@@ -43,9 +43,9 @@ public class NineS : PlayerCharacterBase, IHacker
         hackingRangeIndicator.size = new Vector2(HackingRange * 2.1f, HackingRange * 2.1f);
     }
 
-    new protected void Update()
+    new protected void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
 
         if (InRange)
         {
