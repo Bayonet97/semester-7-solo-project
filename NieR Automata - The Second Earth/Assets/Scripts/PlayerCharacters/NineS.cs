@@ -21,6 +21,9 @@ public class NineS : PlayerCharacterBase, IHacker
     public bool InRange { get => _inRange; private set => _inRange = value; }
 
     [SerializeField]
+    private bool _hacking;
+
+    [SerializeField]
     private SphereCollider hackingRangeCollider;
 
     [SerializeField]
@@ -47,7 +50,7 @@ public class NineS : PlayerCharacterBase, IHacker
     {
         base.FixedUpdate();
 
-        if (InRange)
+        if (InRange && _hacking)
         {
             HackingTarget.RestoreSelfControl(HackingSpeed);
         }
@@ -64,10 +67,12 @@ public class NineS : PlayerCharacterBase, IHacker
         if (state != DialogueState.Disabled)
         {
             controls.NinesControls.Move.performed -= MovePerformed;
+            if (_inRange) { _hacking = false; } 
         }
         else if (state == DialogueState.Disabled)
         {
             controls.NinesControls.Move.performed += MovePerformed;
+            if (_inRange) { _hacking = true; }
         }
     }
 
@@ -88,6 +93,7 @@ public class NineS : PlayerCharacterBase, IHacker
         if(c.tag == "TwoB")
         {
             InRange = true;
+            _hacking = true;
             hackingRangeIndicator.color = new Color(1f, 1f, 1f, 0.9f);
             HackingTarget.Draining = false;
         }
@@ -99,6 +105,7 @@ public class NineS : PlayerCharacterBase, IHacker
             HackingTarget.Draining = true;
             hackingRangeIndicator.color = new Color(1f, 1f, 1f, 0.5f);
             InRange = false;
+            _hacking = false;
         }
     }
 }

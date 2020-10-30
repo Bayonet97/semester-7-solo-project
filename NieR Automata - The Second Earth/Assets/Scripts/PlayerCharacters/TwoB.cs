@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Objects;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ public class TwoB : PlayerCharacterBase
 {
     public Contaminated Contaminated;
     private Vector2 randomSway;
+    bool drainingPaused = false;
     protected override void Awake()
     {
         base.Awake();
@@ -27,7 +29,7 @@ public class TwoB : PlayerCharacterBase
     {
         base.FixedUpdate();
 
-        if (Contaminated.Draining)
+        if (Contaminated.Draining && drainingPaused == false)
         {
             Contaminated.DrainSelfControl(Contaminated.DrainRate);
         }
@@ -55,9 +57,9 @@ public class TwoB : PlayerCharacterBase
             // Determines the movement direction and speed in the world space. 
             Vector3 worldDirection = new Vector3(twitchMovementDirection.x * speed, 0, twitchMovementDirection.y * speed);
             //Look at direction
-            transform.rotation = Quaternion.LookRotation(worldDirection);
+            rigidbody.MoveRotation(Quaternion.LookRotation(worldDirection));
             // Move
-            transform.Translate(worldDirection * Time.deltaTime, Space.World);
+            rigidbody.MovePosition(transform.position + worldDirection * Time.fixedDeltaTime);
         }
       
     }
@@ -83,10 +85,19 @@ public class TwoB : PlayerCharacterBase
         if (state != DialogueState.Disabled)
         {
             controls.TwobControls.Move.performed -= MovePerformed;
+            if (Contaminated.Draining)
+            {
+                drainingPaused = true;
+            }
+
         }
         else if (state == DialogueState.Disabled)
         {
             controls.TwobControls.Move.performed += MovePerformed;
+            if (Contaminated.Draining)
+            {
+                drainingPaused = false;
+            }
         }
     }
 
@@ -96,6 +107,7 @@ public class TwoB : PlayerCharacterBase
         base.OnEnable();
         controls.TwobControls.Enable();
     }
+
 
     protected override void OnDisable()
     {

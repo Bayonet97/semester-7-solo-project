@@ -9,6 +9,7 @@ public abstract class PlayerCharacterBase : MonoBehaviour
 {
     // Reference to the mapping object of the controls
     protected PlayerControls controls;
+    protected Rigidbody rigidbody;
 
     [SerializeField] protected CharacterDialogue characterDialogue;
     [SerializeField] protected CharacterInteraction characterInteraction;
@@ -22,9 +23,12 @@ public abstract class PlayerCharacterBase : MonoBehaviour
 
     [SerializeField] private float interactionRange = 0.5f;
 
+    public InteractableObject ObjectInRange;
+
     protected virtual void Awake()
     {
         controls = new PlayerControls();
+        rigidbody = this.GetComponent<Rigidbody>();
     }
 
     protected void FixedUpdate()
@@ -40,8 +44,9 @@ public abstract class PlayerCharacterBase : MonoBehaviour
         // When moving, the stick's direction is taken and translated to x and z axis.
         Vector3 direction = new Vector3(oldMovementInput.x * speed, 0, oldMovementInput.y * speed);
         // The character then takes that direction and moves in world space.
-        transform.Translate(direction * Time.deltaTime, Space.World);
-        transform.rotation = Quaternion.LookRotation(direction);
+        // transform.Translate(direction * Time.deltaTime, Space.World);
+        rigidbody.MoveRotation(Quaternion.LookRotation(direction));
+        rigidbody.MovePosition(transform.position + direction * Time.fixedDeltaTime);
     }
 
     protected void MovePerformed(InputAction.CallbackContext stickDirection)
@@ -76,14 +81,27 @@ public abstract class PlayerCharacterBase : MonoBehaviour
         }
         else
         {
-            RaycastHit objectInRange;
-            if (Physics.Raycast(transform.position, transform.forward, out objectInRange, interactionRange))
+           if(ObjectInRange != null)
             {
-                if (objectInRange.collider.gameObject.GetComponent<InteractableObject>())
-                    characterInteraction.InteractWithObject(objectInRange.collider.gameObject.GetComponent<InteractableObject>());
-            }
+                characterInteraction.InteractWithObject(ObjectInRange);
+            }                  
         }
+    }
 
+    public void EnteredInteractableRange(InteractableObject interactable, PlayerCharacterBase character)
+    {
+        if(character != this) { return; }
+        ObjectInRange = interactable;
+        ObjectInRange.Highlight(true);
+    }
+    private void ExitedInteractableRange(InteractableObject obj, PlayerCharacterBase character)
+    {
+        if (character != this) { return; }
+        if(ObjectInRange == obj)
+        {
+            ObjectInRange.Highlight(false);
+            ObjectInRange = null;
+        }
     }
 
     public void ShowDialogue(List<string> newDialogueText, string name)
@@ -127,13 +145,16 @@ public abstract class PlayerCharacterBase : MonoBehaviour
         CharacterDialogue.OnDialogueStateChanged += UpdateCharacterDialogueState;
         CharacterInteraction.OnDialogueHasText += ShowDialogue;
         CharacterInteraction.OnConversating += LookAtConversatingTarget;
+        InteractableObject.OnEnteredRange += EnteredInteractableRange;
+        InteractableObject.OnExitedRange += ExitedInteractableRange;
     }
-
 
     protected virtual void OnDisable()
     {
         CharacterDialogue.OnDialogueStateChanged -= UpdateCharacterDialogueState;
         CharacterInteraction.OnDialogueHasText -= ShowDialogue;
         CharacterInteraction.OnConversating -= LookAtConversatingTarget;
+        InteractableObject.OnEnteredRange -= EnteredInteractableRange;
+        InteractableObject.OnExitedRange += ExitedInteractableRange;
     }
 }

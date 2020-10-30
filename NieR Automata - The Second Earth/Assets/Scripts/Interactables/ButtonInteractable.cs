@@ -27,7 +27,7 @@ public class ButtonInteractable : InteractableObject
 
     public void Start()
     {
-        GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
+        GetComponent<Renderer>().material.SetColor("_Color", Color.red);
         closedRotation = door.transform;
     }
 
@@ -40,8 +40,7 @@ public class ButtonInteractable : InteractableObject
 
     public void TryOpen(ButtonInteractable button)
     {
-        pressedButtons.Add(button);       
-
+        pressedButtons.Add(button);
         if (pressedButtons.Count == 2) 
         {
             StartCoroutine(Open(closedRotation, openRotation, 1.0f));
@@ -50,7 +49,10 @@ public class ButtonInteractable : InteractableObject
 
     public void RemoveButton(ButtonInteractable button)
     {
-        pressedButtons.Remove(button);
+        if (pressedButtons.Contains(button) && button.isDoorMoving == false)
+        {
+            pressedButtons.Remove(button);
+        }
     }
 
     private IEnumerator CountDownPress()
@@ -64,7 +66,7 @@ public class ButtonInteractable : InteractableObject
             yield return null;
         }
 
-        GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
+        GetComponent<Renderer>().material.SetColor("_Color", Color.red);
         OnButtonUnPressed(this);
     }
 
@@ -101,7 +103,7 @@ public class ButtonInteractable : InteractableObject
             yield break; ///exit if this is still running
         }
 
-        GetComponent<Renderer>().material.SetColor("_Color", Color.gray);
+        GetComponent<Renderer>().material.SetColor("_Color", Color.red);
         
         isDoorMoving = true;
 
@@ -117,6 +119,7 @@ public class ButtonInteractable : InteractableObject
         }
         door.transform.rotation = Quaternion.Euler(0, 0, 0);
         isDoorMoving = false;
+        OnButtonUnPressed(this);
     }
 
     private void OnEnable()
