@@ -70,4 +70,21 @@ public class GateInteractable : InteractableObject
 
         isDoorMoving = false;
     }
+
+    public void LockGate()
+    {
+        Destroy(GetComponent<GateInteractable>());
+    }
+
+    public void OnEnable()
+    {
+        // Subscribe to door open event.
+        ButtonInteractable.OnDoorOpen += LockGate;
+    }
+
+    public void OnDisable()
+    {
+        // Subscribe to door open event.
+        ButtonInteractable.OnDoorOpen -= LockGate;
+    }
 }

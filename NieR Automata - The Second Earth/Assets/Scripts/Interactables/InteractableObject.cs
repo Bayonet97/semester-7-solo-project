@@ -27,6 +27,7 @@ namespace Assets.Scripts.Objects
 
         public void Awake()
         {
+            enabled = true;
             if (gameObject.GetComponent<MeshRenderer>() != null)
             {
                gameObject.AddComponent<Outline>();

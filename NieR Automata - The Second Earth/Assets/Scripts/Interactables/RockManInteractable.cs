@@ -27,8 +27,6 @@ public class RockManInteractable : InteractableObject
 
     public void OnEnable()
     {
-        RockInteractableObject.OnRockMovedAside += RockMovedAside;
+        HomeBackDoor.OnRockMovedAside += RockMovedAside;
     }
-
-
 }

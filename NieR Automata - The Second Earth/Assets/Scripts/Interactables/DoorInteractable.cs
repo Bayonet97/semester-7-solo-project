@@ -9,23 +9,18 @@ public class DoorInteractable : InteractableObject
     private Transform closedRotation;
     private float openRotation = 90f;
 
-    bool isDoorMoving = false;
+    bool doorOpen = false;
 
     public override void Interact()
     {
-        if (!isDoorMoving)
+        if (!doorOpen)
         {
             StartCoroutine(Open(closedRotation, openRotation, 1f));
         }
     }
     IEnumerator Open(Transform fromPosition, float toPosition, float duration)
     {
-        //Make sure there is only one instance of this function running
-        if (isDoorMoving)
-        {
-            yield break; ///exit if this is still running
-        }
-        isDoorMoving = true;
+        doorOpen = true;
 
         float counter = 0;
 
@@ -38,12 +33,10 @@ public class DoorInteractable : InteractableObject
 
             yield return null;
         }
-
-        isDoorMoving = false;
-        StartCoroutine(Close(openRotation, closedRotation, 1f));
+        //StartCoroutine(Close(openRotation, closedRotation, 1f));
     }
 
-    IEnumerator Close(float fromPosition, Transform toPosition, float duration)
+  /*  IEnumerator Close(float fromPosition, Transform toPosition, float duration)
     {
         //Make sure there is only one instance of this function running
         if (isDoorMoving)
@@ -67,5 +60,5 @@ public class DoorInteractable : InteractableObject
         }
         transform.rotation = Quaternion.Euler(0, 0, 0);
         isDoorMoving = false;
-    }
+    }*/
 }

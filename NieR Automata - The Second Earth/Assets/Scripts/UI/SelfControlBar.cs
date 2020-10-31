@@ -11,10 +11,16 @@ public class SelfControlBar : MonoBehaviour
 
     public Contaminated Infected;
 
-    private void OnEnable()
+    private void Awake()
     {
         //TwoB.OnSelfControlChanged += UpdateSelfControlBar;
         Contaminated.OnSelfControlChanged += UpdateSelfControlBar;
+        Contaminated.OnSelfControlEmpty += SelfControlEmpty;
+    }
+
+    private void SelfControlEmpty()
+    {
+       //
     }
 
     private void UpdateSelfControlBar(int selfControl)

@@ -8,6 +8,9 @@ public class Contaminated : ScriptableObject, IContaminated
     public delegate void SelfControlChanged(int newValue);
     public static event SelfControlChanged OnSelfControlChanged;
 
+    public delegate void SelfControlEmpty();
+    public static event SelfControlEmpty OnSelfControlEmpty;
+
     [SerializeField]
     private AnimationCurve _selfControlCurve;
     public AnimationCurve SelfControlCurve { get => _selfControlCurve; set => _selfControlCurve = value; }
@@ -47,6 +50,11 @@ public class Contaminated : ScriptableObject, IContaminated
 
             OnSelfControlChanged(SelfControl);
         }
+        else
+        {
+            Draining = false;
+            OnSelfControlEmpty();
+        }
     }
 
     public void RestoreSelfControl(int restoreAmount)
@@ -62,6 +70,8 @@ public class Contaminated : ScriptableObject, IContaminated
 
     public void OnEnable()
     {
-        selfControlDecimal = SelfControl;
+        //SelfControl = MaxSelfControl;
+        selfControlDecimal = MaxSelfControl;
+        Draining = true;
     }
 }

@@ -12,6 +12,9 @@ public class ButtonInteractable : InteractableObject
     public delegate void ButtonUnPressed(ButtonInteractable button);
     public static event ButtonUnPressed OnButtonUnPressed;
 
+    public delegate void DoorOpen();
+    public static event DoorOpen OnDoorOpen;
+
     [SerializeField]
     private GameObject door;
 
@@ -20,7 +23,7 @@ public class ButtonInteractable : InteractableObject
 
     private Transform closedRotation;
     private float openRotation = 90f;
-
+    private bool open = false;
     bool isDoorMoving = false;
 
     List<ButtonInteractable> pressedButtons = new List<ButtonInteractable>();
@@ -33,8 +36,9 @@ public class ButtonInteractable : InteractableObject
 
     public override void Interact()
     {
-        if (pressedButtons.Contains(this)) { return; }
+        if (pressedButtons.Contains(this) || open) { return; }
         OnButtonPressed(this);
+
         StartCoroutine(CountDownPress());
     }
 
@@ -65,13 +69,16 @@ public class ButtonInteractable : InteractableObject
             counter -= Time.deltaTime;
             yield return null;
         }
-
-        GetComponent<Renderer>().material.SetColor("_Color", Color.red);
-        OnButtonUnPressed(this);
+        if (!open)
+        {
+            GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+            OnButtonUnPressed(this);
+        }
     }
 
     IEnumerator Open(Transform fromPosition, float toPosition, float duration)
     {
+        open = true;
         //Make sure there is only one instance of this function running
         if (isDoorMoving)
         {
@@ -90,12 +97,12 @@ public class ButtonInteractable : InteractableObject
             
             yield return null;
         }
-
+        OnDoorOpen();
         isDoorMoving = false;
-        StartCoroutine(Close(openRotation, closedRotation, 1f));
+        //StartCoroutine(Close(openRotation, closedRotation, 1f));
     }
 
-    IEnumerator Close(float fromPosition, Transform toPosition, float duration)
+/*    IEnumerator Close(float fromPosition, Transform toPosition, float duration)
     {
         //Make sure there is only one instance of this function running
         if (isDoorMoving)
@@ -120,11 +127,12 @@ public class ButtonInteractable : InteractableObject
         door.transform.rotation = Quaternion.Euler(0, 0, 0);
         isDoorMoving = false;
         OnButtonUnPressed(this);
-    }
+    }*/
 
     private void OnEnable()
     {
         OnButtonPressed += TryOpen;
         OnButtonUnPressed += RemoveButton;
+
     }
 }

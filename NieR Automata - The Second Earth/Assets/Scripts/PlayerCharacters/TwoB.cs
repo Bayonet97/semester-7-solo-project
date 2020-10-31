@@ -11,6 +11,8 @@ public class TwoB : PlayerCharacterBase
     public Contaminated Contaminated;
     private Vector2 randomSway;
     bool drainingPaused = false;
+    private bool canMurder;
+
     protected override void Awake()
     {
         base.Awake();
@@ -41,6 +43,11 @@ public class TwoB : PlayerCharacterBase
         {
             base.InteractPerformed(obj);
         }
+    }
+
+    public void MurderSomeone()
+    {
+
     }
 
     protected override void Move()
@@ -105,9 +112,15 @@ public class TwoB : PlayerCharacterBase
     protected override void OnEnable()
     {
         base.OnEnable();
+        ButtonInteractable.OnDoorOpen += CanMurder;
         controls.TwobControls.Enable();
     }
 
+    private  void CanMurder()
+    {
+        canMurder = true;
+        Contaminated.OnSelfControlEmpty += MurderSomeone;
+    }
 
     protected override void OnDisable()
     {
