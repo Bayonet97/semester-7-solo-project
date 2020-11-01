@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.InputSystem.Processors;
+
 namespace Assets.Scripts.Objects
 {
     public abstract class InteractableObject : MonoBehaviour
@@ -18,6 +20,8 @@ namespace Assets.Scripts.Objects
         public List<InteractionFlow> InteractionFlows = new List<InteractionFlow>();
 
         private int _interactionCount;
+
+        public bool Dead = false;
 
         [SerializeField]
         private string _name;
@@ -84,6 +88,16 @@ namespace Assets.Scripts.Objects
         public void SetInteractionCount(int count)
         {
             _interactionCount = count;
+        }
+
+        public void GetKilled()
+        {
+            if(InteractionFlows.Count > 0)
+            {
+                Dead = true;
+                GetComponent<Animator>().enabled = false;
+                transform.rotation = Quaternion.Euler(-90f, transform.rotation.y, transform.rotation.z);
+            }
         }
 
         public void Highlight(bool highlight)

@@ -11,7 +11,12 @@ public class TwoB : PlayerCharacterBase
     public Contaminated Contaminated;
     private Vector2 randomSway;
     bool drainingPaused = false;
-    private bool canMurder;
+    int side; // left is 0, right is 1
+    [SerializeField]
+    private GameObject leftKillTarget;
+    [SerializeField]
+    private GameObject rightKillTarget;
+    //private bool canMurder;
 
     protected override void Awake()
     {
@@ -42,12 +47,32 @@ public class TwoB : PlayerCharacterBase
         if (Contaminated.SelfControl > 0)
         {
             base.InteractPerformed(obj);
+
+            if(ObjectInRange != null && ObjectInRange.name == "Button Right Door")
+            {
+                side = 1;
+            }
+            else if(ObjectInRange != null && ObjectInRange.name == "Button Left Door")
+            {
+                side = 0;
+            }
         }
     }
 
-    public void MurderSomeone()
+    public IEnumerator MurderSomeone()
     {
-
+        yield return new WaitForSeconds(2);
+        if (side == 0)
+        {
+            leftKillTarget.GetComponent<InteractableObject>().GetKilled();
+            transform.position = leftKillTarget.transform.position;
+        } 
+        else if(side == 1)
+        {
+            rightKillTarget.GetComponent<InteractableObject>().GetKilled();
+            transform.position = rightKillTarget.transform.position;
+        }
+        Contaminated.OnSelfControlEmpty -= StartMurdering;
     }
 
     protected override void Move()
@@ -118,8 +143,13 @@ public class TwoB : PlayerCharacterBase
 
     private  void CanMurder()
     {
-        canMurder = true;
-        Contaminated.OnSelfControlEmpty += MurderSomeone;
+        //canMurder = true;
+        Contaminated.OnSelfControlEmpty += StartMurdering;
+    }
+
+    private void StartMurdering()
+    {
+        StartCoroutine(MurderSomeone());
     }
 
     protected override void OnDisable()

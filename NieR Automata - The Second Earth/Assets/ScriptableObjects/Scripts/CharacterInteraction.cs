@@ -18,9 +18,9 @@ public class CharacterInteraction : ScriptableObject
         // CheckSpecificObjectToInteractWith(objectOfInteraction);
 
         objectOfInteraction.Interact();
-        
 
-        if(objectOfInteraction.InteractionFlows.Count > 0 && objectOfInteraction != null)
+
+        if (objectOfInteraction != null && objectOfInteraction.InteractionFlows.Count > 0)
         {
             OnDialogueHasText(objectOfInteraction.InteractionFlows[0].Dialogue, objectOfInteraction.Name);
             OnConversating(objectOfInteraction);

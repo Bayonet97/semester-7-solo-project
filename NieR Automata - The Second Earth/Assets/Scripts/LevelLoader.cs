@@ -11,11 +11,11 @@ public class LevelLoader : MonoBehaviour
     {
         controls = new PlayerControls();
 
-        controls.MenuControls.ResetLevel.performed += ctx => LoadLevel("MechanicsScene");
+        controls.MenuControls.ResetLevel.performed += ctx => LoadLevel("MainScene");
 
         if(SceneManager.GetActiveScene().name == "App")
         {
-            SceneManager.LoadScene("MechanicsScene");
+            SceneManager.LoadScene("MainScene");
         }
     }
     public static void LoadLevel(string levelName)

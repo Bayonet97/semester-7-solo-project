@@ -137,7 +137,7 @@ public abstract class PlayerCharacterBase : MonoBehaviour
 
     private void LookAtConversatingTarget(InteractableObject interactable)
     {
-        transform.LookAt(interactable.transform);
+        transform.LookAt(new Vector3(interactable.transform.position.x, 0f, interactable.transform.position.z));
     }
 
     protected virtual void OnEnable() 

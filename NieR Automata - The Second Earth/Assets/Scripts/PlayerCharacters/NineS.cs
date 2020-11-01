@@ -1,6 +1,10 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Objects;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class NineS : PlayerCharacterBase, IHacker
 {
@@ -42,6 +46,11 @@ public class NineS : PlayerCharacterBase, IHacker
 
         controls.NinesControls.Interact.performed += InteractPerformed;
 
+        if(SceneManager.GetActiveScene().name == "TrialScene")
+        {
+            controls.TwobControls.Interact.performed += ConvictTarget;
+        }
+
         hackingRangeCollider.radius = HackingRange;
         hackingRangeIndicator.size = new Vector2(HackingRange * 2.1f, HackingRange * 2.1f);
     }
@@ -76,16 +85,36 @@ public class NineS : PlayerCharacterBase, IHacker
         }
     }
 
+    public delegate void SuspectConvicted(SuspectInteractable suspect);
+    public event SuspectConvicted OnSuspectConvicted;
+
+    private void ConvictTarget(InputAction.CallbackContext obj)
+    {
+        SuspectInteractable sus = ObjectInRange.GetComponent<SuspectInteractable>();
+        if (ObjectInRange != null && sus != null)
+        {
+            OnSuspectConvicted(sus);
+        }
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();
         controls.NinesControls.Enable();
+        if(SceneManager.GetActiveScene().name == "TrialScene")
+        {
+            controls.TwobControls.Interact.Enable();
+        }
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
         controls.NinesControls.Disable();
+        if (SceneManager.GetActiveScene().name == "TrialScene")
+        {
+            controls.TwobControls.Interact.Disable();
+        }
     }
 
     public void OnTriggerEnter(Collider c)
