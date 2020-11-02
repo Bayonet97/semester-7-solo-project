@@ -8,7 +8,8 @@ public class MichaelInteractable : InteractableObject
 {
     public delegate void OpeningDoor();
     public static event OpeningDoor OnOpeningDoor;
-
+    [SerializeField]
+    CharacterDialogue characterDialogue;
     public override void Interact()
     {
         if (!Dead)
@@ -17,7 +18,9 @@ public class MichaelInteractable : InteractableObject
         }
         else if (Dead)
         {
+            InteractionFlows.Remove(InteractionFlows[0]);
             LevelLoader.LoadLevel("TrialScene");
+            
            // InteractionFlows.Remove(InteractionFlows[0]);
         }
     }

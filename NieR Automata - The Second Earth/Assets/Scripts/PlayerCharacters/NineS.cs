@@ -91,9 +91,21 @@ public class NineS : PlayerCharacterBase, IHacker
     private void ConvictTarget(InputAction.CallbackContext obj)
     {
         SuspectInteractable sus = ObjectInRange.GetComponent<SuspectInteractable>();
-        if (ObjectInRange != null && sus != null)
+        if (ObjectInRange != null && sus != null && characterDialogue.GetDialogueState() == DialogueState.Disabled)
         {
             OnSuspectConvicted(sus);
+        }
+        else if(characterDialogue.GetDialogueState() != DialogueState.Disabled)
+        {
+            if(characterDialogue.DialogueText == "You have finished the current version of the game.")
+            {
+                Application.Quit();
+            }
+            else
+            {
+                characterDialogue.NextState();
+            }
+
         }
     }
 

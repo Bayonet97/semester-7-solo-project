@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class LinaInteractable : InteractableObject
 {
-
+    [SerializeField]
+    CharacterDialogue characterDialogue;
     public override void Interact()
     {
         if (!Dead)
@@ -14,9 +15,10 @@ public class LinaInteractable : InteractableObject
         }
         else if (Dead)
         {
-            
+            InteractionFlows.Remove(InteractionFlows[0]);
             LevelLoader.LoadLevel("TrialScene");
-           // InteractionFlows.Remove(InteractionFlows[0]);
+            
+            // InteractionFlows.Remove(InteractionFlows[0]);
         }
     }
 }

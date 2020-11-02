@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Camera))]
 public class MultipleTargetCamera : MonoBehaviour
@@ -19,6 +20,9 @@ public class MultipleTargetCamera : MonoBehaviour
 
     private Vector3 velocity;
     private Camera cam;
+
+    [SerializeField]
+    private NineS nines;
 
     private void Start()
     {
@@ -85,9 +89,19 @@ public class MultipleTargetCamera : MonoBehaviour
         }
     }
 
+    private void tiltCameraUp(SuspectInteractable suspect)
+    {
+        cameraTargets = null;
+        transform.rotation = Quaternion.Euler(-70f, 0f, 0f);
+    }
+
     public void OnEnable()
     {
         Contaminated.OnSelfControlChanged += ManageFollowTwob;
+        if(SceneManager.GetActiveScene().name == "TrialScene")
+        {
+            nines.OnSuspectConvicted += tiltCameraUp;
+        }
     }
 
     public void OnDisable()

@@ -11,9 +11,4 @@ public class JailorInteractable : InteractableObject
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

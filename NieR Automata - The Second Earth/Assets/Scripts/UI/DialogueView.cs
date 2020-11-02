@@ -7,6 +7,7 @@ public class DialogueView : MonoBehaviour
 {
     public Text dialogueText;
     public Text dialogueName;
+    public GameObject nameBox;
     private string _textToDisplay;
 
     [SerializeField] private int _timeBetweenLetters;
@@ -35,8 +36,13 @@ public class DialogueView : MonoBehaviour
         _textToDisplay = text;
         if (!string.IsNullOrEmpty(name)) 
         {
+            nameBox.SetActive(true);
             dialogueName.text = name;
         } 
+        else
+        {
+            nameBox.SetActive(false);
+        }
     }
 
     private void DisplayText()
