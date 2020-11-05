@@ -46,12 +46,13 @@ public class ConvictionResultInteractable : InteractableObject
 
     public void OnEnable()
     {
-        nines.OnSuspectConvicted += setSuspect;
+        nines.OnSuspectConvicted += SetSuspect;
     }
 
-    private void setSuspect(SuspectInteractable suspect)
+    private void SetSuspect(SuspectInteractable suspect)
     {
         sus = suspect;
+        Name = "";
         interaction.InteractWithObject(this);
     }
 }

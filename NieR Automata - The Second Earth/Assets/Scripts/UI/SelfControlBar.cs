@@ -20,7 +20,7 @@ public class SelfControlBar : MonoBehaviour
 
     private void SelfControlEmpty()
     {
-     //   yield return null;
+        selfControlBar.value = 0;
     }
 
     private void UpdateSelfControlBar(int selfControl)

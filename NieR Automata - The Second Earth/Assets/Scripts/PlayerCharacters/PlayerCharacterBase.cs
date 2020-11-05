@@ -91,6 +91,11 @@ public abstract class PlayerCharacterBase : MonoBehaviour
     public void EnteredInteractableRange(InteractableObject interactable, PlayerCharacterBase character)
     {
         if(character != this) { return; }
+        if(ObjectInRange != null)
+        {
+            ObjectInRange.Highlight(false);
+        }
+
         ObjectInRange = interactable;
         ObjectInRange.Highlight(true);
     }

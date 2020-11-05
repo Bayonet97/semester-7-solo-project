@@ -32,11 +32,17 @@ namespace Assets.Scripts.Objects
         public void Awake()
         {
             enabled = true;
+
             if (gameObject.GetComponent<MeshRenderer>() != null)
             {
-               gameObject.AddComponent<Outline>();
+                gameObject.AddComponent<Outline>();
                 gameObject.GetComponent<Outline>().eraseRenderer = true;
-            }   
+            }
+            else if (gameObject.GetComponentInChildren<SkinnedMeshRenderer>() != null)
+            {
+                gameObject.transform.GetChild(0).gameObject.AddComponent<Outline>();
+                gameObject.transform.GetChild(0).gameObject.GetComponent<Outline>().eraseRenderer = true;
+            }
         }
         public virtual void Interact()
         {
@@ -105,6 +111,10 @@ namespace Assets.Scripts.Objects
             if (gameObject.GetComponent<Outline>())
             {
                 gameObject.GetComponent<Outline>().eraseRenderer = !highlight;
+            }
+            else if (gameObject.GetComponentInChildren<Outline>())
+            {
+                gameObject.GetComponentInChildren<Outline>().eraseRenderer = !highlight;
             }
         }
 

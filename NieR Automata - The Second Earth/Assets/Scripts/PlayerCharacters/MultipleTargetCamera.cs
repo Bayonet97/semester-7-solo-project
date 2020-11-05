@@ -89,6 +89,15 @@ public class MultipleTargetCamera : MonoBehaviour
         }
     }
 
+    private void ManageFollowTwob()
+    {
+        Transform twoBTransform = followTargets.Find(ch => ch.TryGetComponent(out TwoB tB));
+        if (twoBTransform != null)
+        {
+            followTargets.Remove(twoBTransform);
+        }
+    }
+
     private void tiltCameraUp(SuspectInteractable suspect)
     {
         cameraTargets = null;
@@ -98,7 +107,8 @@ public class MultipleTargetCamera : MonoBehaviour
     public void OnEnable()
     {
         Contaminated.OnSelfControlChanged += ManageFollowTwob;
-        if(SceneManager.GetActiveScene().name == "TrialScene")
+        Contaminated.OnSelfControlEmpty += ManageFollowTwob;
+        if (SceneManager.GetActiveScene().name == "TrialScene")
         {
             nines.OnSuspectConvicted += tiltCameraUp;
         }
@@ -107,5 +117,6 @@ public class MultipleTargetCamera : MonoBehaviour
     public void OnDisable()
     {
         Contaminated.OnSelfControlChanged -= ManageFollowTwob;
+        Contaminated.OnSelfControlEmpty -= ManageFollowTwob;
     }
 }

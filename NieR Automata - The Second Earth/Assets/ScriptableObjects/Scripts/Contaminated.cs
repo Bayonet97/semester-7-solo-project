@@ -70,8 +70,8 @@ public class Contaminated : ScriptableObject, IContaminated
 
     public void OnEnable()
     {
-        //SelfControl = MaxSelfControl;
-        selfControlDecimal = MaxSelfControl;
+        //SelfControl = 1;
+        selfControlDecimal = SelfControl;
         Draining = true;
     }
 }

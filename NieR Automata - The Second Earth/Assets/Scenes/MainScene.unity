@@ -991,6 +991,7 @@ GameObject:
   - component: {fileID: 208118724}
   - component: {fileID: 208118726}
   - component: {fileID: 208118725}
+  - component: {fileID: 208118727}
   m_Layer: 5
   m_Name: SelfControl (View)
   m_TagString: Untagged
@@ -1057,6 +1058,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 208118723}
   m_CullTransparentMesh: 0
+--- !u!114 &208118727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208118723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe2cccb23e59fa43b08892fc969ba68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nines: {fileID: 2060690884}
 --- !u!1001 &215702419
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1402,8 +1416,8 @@ Transform:
   - {fileID: 730157931}
   - {fileID: 792012572}
   - {fileID: 224699616}
-  - {fileID: 602982179}
   - {fileID: 2033608808}
+  - {fileID: 602982179}
   - {fileID: 1981015578}
   - {fileID: 775371153}
   - {fileID: 1921550634}
@@ -1785,7 +1799,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4301369446033440, guid: e85f10072d335224984d9b8ae2e93843, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.5
+      value: 1.77
       objectReference: {fileID: 0}
     - target: {fileID: 4301369446033440, guid: e85f10072d335224984d9b8ae2e93843, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4648,7 +4662,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4535344246604004, guid: 24362449162558a49bc6904c0fda923a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.87
+      value: -8.27
       objectReference: {fileID: 0}
     - target: {fileID: 4535344246604004, guid: 24362449162558a49bc6904c0fda923a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6506,10 +6520,10 @@ MonoBehaviour:
   - {fileID: 1589068511}
   - {fileID: 2060690888}
   followTargets: []
-  Offset: {x: 0, y: 15, z: -16}
-  smoothTime: 0.5
+  Offset: {x: 0, y: 15, z: -17}
+  smoothTime: 0.2
   minZoom: 45
-  maxZoom: 14
+  maxZoom: 15
   zoomLimiter: 20
   nines: {fileID: 0}
 --- !u!81 &1462027751
@@ -7290,6 +7304,7 @@ MonoBehaviour:
   Contaminated: {fileID: 11400000, guid: 50b7f5d6c80a9684ab82902cb5e16f2b, type: 2}
   leftKillTarget: {fileID: 1185657895}
   rightKillTarget: {fileID: 1774360259}
+  nines: {fileID: 0}
 --- !u!136 &1589068508
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8511,7 +8526,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4457282994381246, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.084625155
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4457282994381246, guid: 15a550206f811c346b37f3a3f4495178, type: 3}
       propertyPath: m_LocalPosition.z

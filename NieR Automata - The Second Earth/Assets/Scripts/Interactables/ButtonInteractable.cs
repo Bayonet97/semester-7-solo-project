@@ -91,13 +91,13 @@ public class ButtonInteractable : InteractableObject
         //Get the current position of the object to be moved
         Transform startPos = fromPosition;
         door.transform.rotation = Quaternion.Euler(0, toPosition, 0);
+        OnDoorOpen();
         while (counter < duration)
         {
             counter += Time.deltaTime;
             
             yield return null;
         }
-        OnDoorOpen();
         isDoorMoving = false;
         //StartCoroutine(Close(openRotation, closedRotation, 1f));
     }

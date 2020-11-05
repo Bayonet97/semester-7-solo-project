@@ -52,6 +52,7 @@ public class NineS : PlayerCharacterBase, IHacker
         }
 
         hackingRangeCollider.radius = HackingRange;
+        hackingRangeIndicator.color = new Color(1f, 1f, 1f, 0.5f);
         hackingRangeIndicator.size = new Vector2(HackingRange * 2.1f, HackingRange * 2.1f);
     }
 
@@ -94,6 +95,8 @@ public class NineS : PlayerCharacterBase, IHacker
         if (ObjectInRange != null && sus != null && characterDialogue.GetDialogueState() == DialogueState.Disabled)
         {
             OnSuspectConvicted(sus);
+            controls.NinesControls.Interact.Disable();
+            controls.NinesControls.Move.Disable();
         }
         else if(characterDialogue.GetDialogueState() != DialogueState.Disabled)
         {

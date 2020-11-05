@@ -55,6 +55,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _maxSelfControl: 100
-  _selfControl: 54
+  _selfControl: 58
   _drainRate: 6
-  _draining: 0
+  _draining: 1

@@ -17,6 +17,8 @@ public class TwoB : PlayerCharacterBase
     [SerializeField]
     private GameObject rightKillTarget;
     //private bool canMurder;
+    [SerializeField]
+    private NineS nines;
 
     protected override void Awake()
     {
@@ -72,6 +74,7 @@ public class TwoB : PlayerCharacterBase
             rightKillTarget.GetComponent<InteractableObject>().GetKilled();
             transform.position = rightKillTarget.transform.position;
         }
+
         Contaminated.OnSelfControlEmpty -= StartMurdering;
     }
 
@@ -138,6 +141,7 @@ public class TwoB : PlayerCharacterBase
     {
         base.OnEnable();
         ButtonInteractable.OnDoorOpen += CanMurder;
+        //nines.OnSuspectConvicted += 
         controls.TwobControls.Enable();
     }
 
